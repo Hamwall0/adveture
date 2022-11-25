@@ -9,34 +9,69 @@ class spelare():
         self.inventory = inventory
         self.namn = namn
 
-    def stats():
+    def stats(namn):
         return print(f"Name: {namn.namn} STR: {namn.strength} , HP: {namn.hp}, LVL: {namn.lvl}\n{namn.inventory}")
     
-    def inventory():
+    def backpack(namn):
+        count = 1
+        for i in namn.inventory:
+            print(f"{count}.",i.Type,"dmg:",i.damadge)
+            count +=1
+        while True:
+            user_choice = input("vill du ta bort ett item y/n--> ")
+            if user_choice in ("Yes","Y","y","yes"):
+                while True:
+                    x = input("välj  positionen på itemet du vill ta bort") 
+                    if x <= 5:
+                        namn.inventory.pop(x)
+                        break
+                    else:
+                        print("Inmätnings fel")
+                        continue
+            elif user_choice in ("No","no","N","n"):
+                break
+            else:
+                print("du skrev något förbjudet")
+                continue
+            
         
-        invent = ["Slot_1","Slot_2","Slot_3","Slot_4","Slot_5"]
-        return print(invent)
-
+        #invent = ["Slot_1","Slot_2","Slot_3","Slot_4","Slot_5"]
+        #return print(invent)
+        
+class item_attribut():
+    def __init__(self,dmg,Type):
+        self.damadge = dmg
+        self.Type = Type 
+        
+    
 def kista():
     while True:
         items = ["penna", "sudd", "sword", "Dog"]
         item_chans = rand.randint(0,len(items)-1)
-        item = items.pop(item_chans)
+        Gachaitem = items.pop(item_chans) 
+        item = item_attribut(rand.randint(1,5),Gachaitem)
         print("du hittade en kista")
-        #print(items)
-        print("Du fick en:",item)
+        print("Du fick en:",item.Type)
         namn.inventory.append(item)
-        return print(f"{item}, added to inventory \n {namn.inventory}")
+        if len(namn.inventory) > 5:
+            print("din rygsäck är full")
+            
+        else:
+            return print(f"{item.Type}, added to inventory")
+
 def monster():
     monster_strength = rand.randint(1,10)
     if namn.strength > monster_strength:
         print("du besegrade monstret ")
-    elif namn.strenghth < monster_strength:
-        print("monstret var starkare än dig och du tog skada")
+    elif namn.strength < monster_strength:
+        namn.hp += -monster_strength
+        print(f"monstret var starkare än dig och du tog skada, M_STR: {monster_strength}")
+        print("Current HP:",namn.hp)
     else:
-        print(f"{namn} och monstret va gämn starka ")
+        print(f"{namn.namn} och monstret va gämn starka ")
     
-    
+
+    pass
                 
 def door():
     while True:
@@ -51,6 +86,7 @@ def door():
                 kista()
             elif chans == 3:
                 print("du stötte på ett monster")
+                monster()
             else:
                 print("det fins bara tre dörrar!")
                 continue
@@ -69,7 +105,7 @@ while True:
         elif choice == "2":
             namn.stats()
         elif choice == "3":
-            namn.inventory()
+            namn.backpack()
     else:
         print("du skrev in något förbjudet")
         continue
