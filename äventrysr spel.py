@@ -90,7 +90,7 @@ def monster():
     else:
         print(f"{namn.namn} och monstret va gämn starka")   
 def door():
-    while True:
+    while namn.hp >0:
         door = input("\nvälje en av tre dörrar ('1' '2' '3'): 4 = Meny --> ")
         if door == "4":
             break
@@ -112,7 +112,7 @@ def door():
 namn = input("välje ett namn -> ") 
 namn = spelare(namn, 5, 10, 1,[])
 
-while True:
+while namn.hp>0:
     choice = input(""" \nvad vill du göra
     1.öppna en dör      2.check status
     3.kolla ditt inventory 
@@ -127,3 +127,5 @@ while True:
     else:
         print("du skrev in något förbjudet")
         continue
+print("game over")
+    #Välja en specific door, Monster HP (Combat mechanics)
