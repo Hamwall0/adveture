@@ -31,11 +31,12 @@ class spelare():
                     continue
         else:
             print("din rygsäck är tom")
-    def lvl_up(namn):
-        print(f"du levlade upp: [STR {namn.strength} + 1] [LVL {namn.lvl} + 1], [HP {namn.hp} + 2]")
-        namn.strength += 1
-        namn.lvl += 1
-        namn.hp += 2
+
+def lvl_up():
+    print(f"du levlade upp: [STR {namn.strength} + 3] [LVL {namn.lvl} + 1], [HP {namn.hp} + 2]")
+    namn.strength += 3
+    namn.lvl += 1
+    namn.hp += 2
 
 
 def manadge_items():
@@ -63,6 +64,7 @@ def kista():
         item = item_attribut(rand.randint(1,5),Gachaitem)
         print("\ndu hittade en kista")
         print("Du fick en:",item.Type,"DMG: ",item.dmg)
+        lvl_up()
         namn.inventory.append(item)
         if len(namn.inventory) > 5:
             print("din rygsäck är full")
@@ -76,25 +78,48 @@ def item_bonus():
     for sak in namn.inventory:
         dmg_bonus += sak.dmg
     return(dmg_bonus)
+
+def combat():
+    full_dmg = item_bonus()
+    monster_strength = rand.randint(1,3)
+    monster_hp = rand.randint(5,10*namn.lvl)
+    while monster_hp > 0 and namn.hp > 0:
+        input("press enter to atack")
+        monster_hp -= namn.strength
+        namn.hp -= monster_strength
+        print(f"{namn.namn} HP:{namn.hp} monster HP: {monster_hp}")
+        if namn.hp <= 0:
+            break
+        elif monster_hp <= 0:
+            lvl_up()
     
 def monster():
-    full_dmg = item_bonus()
-    monster_strength = rand.randint(1,10)
-    if namn.strength + full_dmg > monster_strength:
-        print("du besegrade monstret")
-        namn.lvl_up()
-    elif namn.strength + full_dmg < monster_strength:
-        namn.hp += -monster_strength
-        print(f"monstret var starkare än dig och du tog skada, M_STR: {monster_strength}")
-        print("Current HP:",namn.hp)
-    else:
-        print(f"{namn.namn} och monstret va gämn starka")   
+    while True:
+        choice = input("run? y/n")
+        if choice in ("y","Y","Yes","YES"):
+            chance = rand.randint(1,5)
+            if chance in (1,2,3):
+                print("du lyckades fly från monstret")
+                break 
+            else:
+                print("du lyckades inte fly")
+                combat()
+                break
+        elif choice in ("NO","N","n","No"):
+            combat()
+            break
+        else:
+            print("du skrev något förbjudet")
+            continue
+        
+
+      
 def door():
-    while namn.hp >0:
+    while namn.hp >0 and namn.lvl <= 10:
         door = input("\nvälje en av tre dörrar ('1' '2' '3'): 4 = Meny --> ")
         if door == "4":
             break
-        else:
+        elif door in("1","2","3"):
             chans = rand.randint(1,3)
             if chans == 1:
                 print("\ndu trillade ned i en fälla")
@@ -105,14 +130,14 @@ def door():
             elif chans == 3:
                 print("\ndu stötte på ett monster")
                 monster()
-            else:
-                print("\ndet fins bara tre dörrar!")
-                continue
+        else:
+            print("\ndet fins bara tre dörrar!")
+            continue
 
 namn = input("välje ett namn -> ") 
 namn = spelare(namn, 5, 10, 1,[])
 
-while namn.hp>0:
+while namn.hp>0 and namn.lvl <= 10:
     choice = input(""" \nvad vill du göra
     1.öppna en dör      2.check status
     3.kolla ditt inventory 
@@ -127,5 +152,8 @@ while namn.hp>0:
     else:
         print("du skrev in något förbjudet")
         continue
-print("game over")
+if namn.lvl == 10:
+    print("du vann")
+else:
+    print("game over")
     #Välja en specific door, Monster HP (Combat mechanics)
