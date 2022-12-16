@@ -1,11 +1,12 @@
 import random as rand
+import time
 
 class item_attribut():
     def __init__(self,dmg,Type):
         self.dmg = dmg
         self.Type = Type
 
-class spelare():
+class Spelare():
 
     def __init__(self,namn, strength, hp, lvl, inventory, exp, exp_lim):
         self.strength = strength
@@ -17,16 +18,17 @@ class spelare():
         self.exp_lim = exp_lim
 
     def stats(self):
-        return print(f"""Name: {Gamer_attribute.namn} 
-    STR: {Gamer_attribute.strength} + {item_bonus()} 
-    HP: {Gamer_attribute.hp}
-    LVL: {Gamer_attribute.lvl}
-    EXP: {Gamer_attribute.exp}/{40*Gamer_attribute.exp_lim}""")
+        return print(f"""Name: {gamer_attribute.namn} 
+    STR: {gamer_attribute.strength} + {item_bonus()} 
+    HP: {gamer_attribute.hp}
+    LVL: {gamer_attribute.lvl}
+    EXP: {gamer_attribute.exp}/{40*gamer_attribute.exp_lim}""")
     
     def backpack(self):
         count = 1
         for sak in self.inventory:
-            print(f"{count}.",sak.Type,"dmg:",sak.dmg)
+            print(f"{count}.",sak.Type,"dmg:",sak.dmg,)
+            time.sleep(.25)
             count +=1
             if sak in self.inventory == 5:
                 print("\n Du har blivit DPS Gud! \n + 30 HP")
@@ -47,17 +49,18 @@ class spelare():
             print("\ndin rygsäck är tom")
 
     def lvl_up(self):
-        Gamer_attribute.exp += 10
-        if Gamer_attribute.exp == 40*Gamer_attribute.exp_lim:
-            Gamer_attribute.strength += 3
-            Gamer_attribute.lvl += 1
-            Gamer_attribute.hp += 5
-            Gamer_attribute.exp_lim += 1.5
+        gamer_attribute.exp += 20
+        if gamer_attribute.exp == 40*gamer_attribute.exp_lim:
+            gamer_attribute.exp -= 40*gamer_attribute.exp_lim
+            gamer_attribute.strength += 3
+            gamer_attribute.lvl += 1
+            gamer_attribute.hp += 5
+            gamer_attribute.exp_lim += 0.5
             print(f"""du levlade upp! 
-[STR: {Gamer_attribute.strength}]
-[LVL: {Gamer_attribute.lvl}]
-[HP: {Gamer_attribute.hp}]
-EXP: {Gamer_attribute.exp}""")
+[STR: {gamer_attribute.strength}]
+[LVL: {gamer_attribute.lvl}]
+[HP: {gamer_attribute.hp}]
+EXP: {gamer_attribute.exp}""")
 
 class fiende():
     def __init__(self, monster_namn, monster_styrka, monster_hp):
@@ -69,10 +72,10 @@ class fiende():
 
 def manadge_items():
     while True:
-        x = int(input("\nvälj  positionen på itemet du vill ta bort: "))
-        if x <= len(Gamer_attribute.inventory):
-            trash  = Gamer_attribute.inventory.pop(x-1)
-            print("You removed:", trash.Type, "dmg:", trash.dmg)
+        val = input("\nvälj  positionen på itemet du vill ta bort: ")
+        if val.isdigit() and int(val) <= len(gamer_attribute.inventory):
+            skräp = gamer_attribute.inventory.pop(int(val)-1)
+            print("You removed:", skräp.Type, "dmg:", skräp.dmg)
             break
         else:
             print("Inmätnings fel")
@@ -86,12 +89,12 @@ def kista():
         item = item_attribut(rand.randint(1,5),Gachaitem)
         print("\ndu hittade en kista")
         print("Du fick en:",item.Type,"DMG: ",item.dmg)
-        spelare.lvl_up()
+        gamer_attribute.lvl_up()
         print("+ 10 EXP ")
-        Gamer_attribute.inventory.append(item)
-        if len(Gamer_attribute.inventory) > 5:
+        gamer_attribute.inventory.append(item)
+        if len(gamer_attribute.inventory) > 5:
             print("\ndin rygsäck är full")
-            Gamer_attribute.backpack()
+            gamer_attribute.backpack()
             break
         else:
             return 
@@ -99,7 +102,7 @@ def kista():
 
 def item_bonus():
     dmg_bonus = 0
-    for sak in Gamer_attribute.inventory:
+    for sak in gamer_attribute.inventory:
         dmg_bonus += sak.dmg
     return(dmg_bonus)
 
@@ -112,16 +115,16 @@ class fiende():
 def combat():
     full_dmg = item_bonus()
     monster_strength = rand.randint(1,3)
-    monster_hp = rand.randint(5,10*Gamer_attribute.lvl)
-    while monster_hp > 0 and Gamer_attribute.hp > 0:
+    monster_hp = rand.randint(5,10*gamer_attribute.lvl)
+    while monster_hp > 0 and gamer_attribute.hp > 0:
         input("press enter to attack ")
-        monster_hp -= Gamer_attribute.strength + full_dmg
-        Gamer_attribute.hp -= monster_strength
-        print(f"{Gamer_attribute.namn} HP:{Gamer_attribute.hp} monster HP: {monster_hp}")
-        if Gamer_attribute.hp <= 0:
+        monster_hp -= gamer_attribute.strength + full_dmg
+        gamer_attribute.hp -= monster_strength
+        print(f"{gamer_attribute.namn} HP:{gamer_attribute.hp} monster HP: {monster_hp}")
+        if gamer_attribute.hp <= 0:
             break
         elif monster_hp <= 0:
-            Gamer_attribute.lvl_up()
+            gamer_attribute.lvl_up()
             print("+ 10 EXP")
     
 def monster():
@@ -146,7 +149,7 @@ def monster():
 
       
 def door():
-    while Gamer_attribute.hp > 0 and Gamer_attribute.lvl < 10:
+    while gamer_attribute.hp > 0 and gamer_attribute.lvl < 10:
         door = input("\nvälje en av tre dörrar ('1' '2' '3'): 4 = Meny --> ")
         if door == "4":
             break
@@ -154,8 +157,8 @@ def door():
             chans = rand.randint(1,3)
             if chans == 1:
                 print("\ndu trillade ned i en fälla")
-                print(f"HP:{Gamer_attribute.hp} -1")
-                Gamer_attribute.hp -= 1   
+                print(f"HP:{gamer_attribute.hp} -1")
+                gamer_attribute.hp -= 1   
             elif chans == 2:
                 kista()
             elif chans == 3:
@@ -166,24 +169,26 @@ def door():
             continue
 
 spelare_namn = input("välje ett namn -> ") 
-Gamer_attribute = spelare(spelare_namn, 50, 50, 1,[], 0, 1)
+gamer_attribute = Spelare(spelare_namn, 50, 50, 1,[], 0, 1)
 
-while Gamer_attribute.hp>0 and Gamer_attribute.lvl < 10:
+while gamer_attribute.hp>0 and gamer_attribute.lvl < 10:
+    time.sleep(1)
     choice = input(""" \nvad vill du göra
-    1.öppna en dör      2.check status
-    3.kolla ditt inventory 
+1.öppna en dör      2.check status
+
+3.kolla ditt inventory 
     ->""")
     if choice in ("1","2","3","4"):
         if choice == "1":
             door()
         elif choice == "2":
-            Gamer_attribute.stats()
+            gamer_attribute.stats()
         elif choice == "3":
-            Gamer_attribute.backpack()
+            gamer_attribute.backpack()
     else:
         print("du skrev in något förbjudet")
         continue
-if Gamer_attribute.lvl == 10:
+if gamer_attribute.lvl == 10:
     print("DU VANN!")
 else:
     print("GAME OVER")
