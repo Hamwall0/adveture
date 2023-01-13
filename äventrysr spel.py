@@ -2,20 +2,20 @@ import random as rand
 import time
 
 class Fiende():
-    def __init__(self, monster_namn, monster_styrka):
+    def __init__(self, monster_namn):
         self.namn = monster_namn
-        self.styrka = monster_styrka
+        self.styrka = rand.randint(6,9)
         self.hp = rand.randint(20,30)
             
 class Cockroach_type(Fiende):
-    def __init__(self, monster_namn, monster_styrka):
-        super().__init__(monster_namn, monster_styrka)
+    def __init__(self, monster_namn,):
+        super().__init__(monster_namn,)
         self.hp = rand.randint(21,40)
 
     
 class Sheep_type(Fiende):
-    def __init__(self, monster_namn, monster_styrka):
-        super().__init__(monster_namn, monster_styrka)
+    def __init__(self, monster_namn, ):
+        super().__init__(monster_namn, )
         self.hp = rand.randint(10,19)
 
 
@@ -93,7 +93,7 @@ def kista():
     while True:
         items = ["penna", "sudd", "sword", "Dog"] # Är items som hittas i kista
         item_chans = rand.randint(0,len(items)-1) # Definerar ett slumpmässigt item som "item_chans"
-        item = item_attribut(5,items.pop(item_chans)) # Ger ett slumpmässigt föremål en slumpmässig styrka 
+        item = item_attribut(rand.randint(1,5),items.pop(item_chans)) # Ger ett slumpmässigt föremål en slumpmässig styrka 
         print("\ndu hittade en kista")
         print("Du fick en:",item.Type,"DMG: ",item.dmg)
         spelare.lvl_up()
@@ -117,7 +117,6 @@ def item_bonus():
     return(dmg_bonus)
 
 def combat():
-    full_dmg = item_bonus()
     list_of_fiende = [fiende, sheep, roaches]
     fiende_chans = rand.randint(0,len(list_of_fiende)-1)
     random_fiende = list_of_fiende.pop(fiende_chans)
@@ -129,7 +128,7 @@ def combat():
         fiende.styrka = rand.randint(6,9)
         sheep.styrka = rand.randint(3,5)
         roaches.styrka = rand.randint(0,2)
-        random_fiende.hp -= spelare.strength + full_dmg
+        random_fiende.hp -= spelare.strength + item_bonus()
         spelare.hp -= random_fiende.styrka
         print(f"\n {random_fiende.namn} dealt: {random_fiende.styrka}       {spelare.namn} dealt: {spelare.strength} ")
     
@@ -169,26 +168,26 @@ def door():
         if door == "4":
             break
         elif door in("1","2","3"):
-            chans = rand.randint(1,3)
+            chans = rand.randint(1,5)
             if chans == 1:
                 print("\ndu trillade ned i en fälla")
                 print(f"HP:{spelare.hp} -1")
                 spelare.hp -= 1   
-            elif chans == 2:
+            elif chans == 2 or chans == 3:
                 kista()
-            elif chans == 3:
+            elif chans == 4 or chans == 5:
                 print("\ndu stötte på ett monster")
                 monster()
         else:
             print("\ndet fins bara tre dörrar!")
             continue
 
-roaches = Cockroach_type("Roach", rand.randint(0,9))
-sheep = Sheep_type("Sheep", rand.randint(5,12))
-fiende = Fiende("Bertil", rand.randint(6,9))
+roaches = Cockroach_type("Roach")
+sheep = Sheep_type("Sheep",)
+fiende = Fiende("Bertil",)
 
 spelare_namn = input("välje ett namn -> ") 
-spelare = Spelare(spelare_namn, 50, 50, 1,[], 0, 1)
+spelare = Spelare(spelare_namn, 5, 20, 1,[], 0, 1)
 
 while spelare.hp>0 and spelare.lvl < 10:
     choice = input(""" \nvad vill du göra
